@@ -73,14 +73,28 @@ export default function ProfilePage({ profile, setProfile, theme, setTheme }) {
         <div style={s.heading}>Personal info</div>
 
         <div style={s.row}>
-          <span style={s.fieldLabel}>Name (optional)</span>
+          <span style={s.fieldLabel}>Your name (optional)</span>
           <input
             type="text"
-            placeholder="Your name"
+            placeholder="First name"
             value={profile.name}
             onChange={e => setProfile(p => ({ ...p, name: e.target.value }))}
             style={s.input}
           />
+        </div>
+
+        <div style={s.row}>
+          <span style={s.fieldLabel}>Name your AI coach</span>
+          <input
+            type="text"
+            placeholder="e.g. Apex, Coach, Pulse..."
+            value={profile.aiName || ''}
+            onChange={e => setProfile(p => ({ ...p, aiName: e.target.value }))}
+            style={s.input}
+          />
+          <span style={{ fontSize: 11, color: 'var(--text-dim)', marginTop: 6, display: 'block' }}>
+            This is what your AI coach will be called in the app
+          </span>
         </div>
 
         <div style={s.row}>

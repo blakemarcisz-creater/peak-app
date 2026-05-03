@@ -190,7 +190,7 @@ export default function ScorePage({ latest, onGoLog, recommendedOz = 64, profile
       {/* AI Summary */}
       <div style={{ ...styles.insightCard, border: '0.5px solid var(--accent-border)', background: 'var(--accent-dim)', marginBottom: 16 }}>
         <div style={{ ...styles.insightLabel, color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span>⚡</span> AI Coach Summary
+          <span>⚡</span> {profile?.aiName || 'Coach'}
         </div>
         {aiLoading && (
           <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>

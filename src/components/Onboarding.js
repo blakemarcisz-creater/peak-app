@@ -68,6 +68,7 @@ const s = {
 export default function Onboarding({ onComplete, theme, setTheme }) {
   const [profile, setProfile] = useState({
     name: '',
+    aiName: '',
     gender: 'Male',
     age: 20,
     weight: 160,
@@ -102,6 +103,20 @@ export default function Onboarding({ onComplete, theme, setTheme }) {
               onChange={e => setProfile(p => ({ ...p, name: e.target.value }))}
               style={s.input}
             />
+          </div>
+
+          <div style={s.row}>
+            <span style={s.fieldLabel}>Name your AI coach</span>
+            <input
+              type="text"
+              placeholder="e.g. Apex, Coach, Pulse..."
+              value={profile.aiName}
+              onChange={e => setProfile(p => ({ ...p, aiName: e.target.value }))}
+              style={s.input}
+            />
+            <span style={{ fontSize: 11, color: 'var(--text-dim)', marginTop: 6, display: 'block' }}>
+              Your AI will introduce itself by this name
+            </span>
           </div>
 
           <div style={s.row}>
