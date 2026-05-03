@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getTier, getMetrics, getInsight } from '../utils/scoring';
 
 const styles = {
@@ -128,8 +128,30 @@ function buildShareText(latest, tier, metrics) {
   ].join('\n');
 }
 
-export default function ScorePage({ latest, onGoLog, recommendedOz = 64 }) {
+export default function ScorePage({ latest, onGoLog, recommendedOz = 64, profile }) {
   const [copied, setCopied] = useState(false);
+  const [aiSummary, setAiSummary] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState(false);
+
+  useEffect(() => {
+    if (!latest) return;
+    setAiSummary('');
+    setAiError(false);
+    setAiLoading(true);
+    fetch('/api/summary', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...latest, recommendedOz, profile }),
+    })
+      .then(r => r.json())
+      .then(data => {
+        if (data.summary) setAiSummary(data.summary);
+        else setAiError(true);
+      })
+      .catch(() => setAiError(true))
+      .finally(() => setAiLoading(false));
+  }, [latest?.date]);
 
   if (!latest) {
     return (
@@ -163,6 +185,27 @@ export default function ScorePage({ latest, onGoLog, recommendedOz = 64 }) {
         <button style={styles.shareBtn} onClick={handleShare}>
           {copied ? '✓ Copied!' : 'Copy summary'}
         </button>
+      </div>
+
+      {/* AI Summary */}
+      <div style={{ ...styles.insightCard, border: '0.5px solid var(--accent-border)', background: 'var(--accent-dim)', marginBottom: 16 }}>
+        <div style={{ ...styles.insightLabel, color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span>⚡</span> AI Coach Summary
+        </div>
+        {aiLoading && (
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', animation: 'pulse 1s infinite' }} />
+            <span style={{ fontSize: 13, color: 'var(--text-dim)' }}>Analyzing your data...</span>
+          </div>
+        )}
+        {aiSummary && !aiLoading && (
+          <p style={styles.insightText}>{aiSummary}</p>
+        )}
+        {aiError && !aiLoading && (
+          <p style={{ ...styles.insightText, color: 'var(--text-dim)', fontSize: 13 }}>
+            Could not load AI summary. Make sure your API key is set and the server is running.
+          </p>
+        )}
       </div>
 
       <div style={styles.metricsGrid}>

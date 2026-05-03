@@ -120,6 +120,7 @@ export default function App() {
             latest={latest && new Date(latest.date).toDateString() === todayStr ? latest : null}
             onGoLog={() => setTab('log')}
             recommendedOz={recommendedOz}
+            profile={profile}
           />
         )}
         {tab === 'history' && (
