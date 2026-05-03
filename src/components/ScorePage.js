@@ -128,7 +128,7 @@ function buildShareText(latest, tier, metrics) {
   ].join('\n');
 }
 
-export default function ScorePage({ latest, onGoLog }) {
+export default function ScorePage({ latest, onGoLog, recommendedOz = 64 }) {
   const [copied, setCopied] = useState(false);
 
   if (!latest) {
@@ -176,6 +176,32 @@ export default function ScorePage({ latest, onGoLog }) {
         <div style={styles.insightLabel}>Today's insight</div>
         <p style={styles.insightText}>{insight}</p>
       </div>
+
+      {(latest.foods && latest.foods.length > 0) && (
+        <div style={styles.notesCard}>
+          <div style={styles.insightLabel}>Food logged today</div>
+          {latest.foods.map((food, i) => (
+            <div key={i} style={{ fontSize: 13, color: 'var(--text-muted)', padding: '6px 0', borderBottom: i === latest.foods.length - 1 ? 'none' : '0.5px solid var(--border)', display: 'flex', gap: 8 }}>
+              <span>🍽</span>{food}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {latest.waterOz > 0 && (
+        <div style={styles.notesCard}>
+          <div style={styles.insightLabel}>Hydration</div>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+            <span style={{ fontSize: 28, fontWeight: 500, fontFamily: 'var(--mono)', color: latest.waterOz >= recommendedOz * 0.8 ? '#00e5a0' : '#f59e0b' }}>
+              {latest.waterOz} oz
+            </span>
+            <span style={{ fontSize: 13, color: 'var(--text-dim)' }}>/ {recommendedOz} oz goal</span>
+          </div>
+          <div style={{ height: 4, background: 'var(--border)', borderRadius: 99, marginTop: 10, overflow: 'hidden' }}>
+            <div style={{ height: '100%', width: `${Math.min(100, Math.round((latest.waterOz / recommendedOz) * 100))}%`, background: latest.waterOz >= recommendedOz * 0.8 ? '#00e5a0' : '#f59e0b', borderRadius: 99 }} />
+          </div>
+        </div>
+      )}
 
       {latest.notes && (
         <div style={styles.notesCard}>

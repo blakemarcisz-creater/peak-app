@@ -1,13 +1,35 @@
-// Calculate the performance score from sleep, mood, and nutrition inputs
-export function calcScore({ hours, quality, consistency, stress, mood = 5, nutrition = 5, hydration = 5 }) {
+// Recommended daily water intake in oz based on profile
+export function getRecommendedWaterOz(profile) {
+  if (!profile || !profile.weight) return 64;
+  const lbs = profile.weightUnit === 'kg' ? profile.weight * 2.20462 : profile.weight;
+  const multiplier = profile.gender === 'Female' ? 0.45 : 0.5;
+  return Math.round(lbs * multiplier);
+}
+
+function getNutritionScore(foods = []) {
+  const count = (foods || []).length;
+  if (count === 0) return 3;
+  if (count === 1) return 5;
+  if (count === 2) return 7;
+  if (count === 3) return 8;
+  return 10;
+}
+
+function getHydrationScore(waterOz = 0, recommendedOz = 64) {
+  if (!waterOz) return 3;
+  return Math.min(10, Math.round((waterOz / recommendedOz) * 10));
+}
+
+// Calculate the performance score from all inputs
+export function calcScore({ hours, quality, consistency, stress, mood = 5, foods = [], waterOz = 0, recommendedOz = 64 }) {
   const idealHours = 8.5;
   const hourScore = Math.max(0, 100 - Math.pow(hours - idealHours, 2) * 8);
   const qualityScore = quality * 10;
   const consistencyScore = consistency * 10;
   const stressScore = (10 - stress) * 10;
   const moodScore = mood * 10;
-  const nutritionScore = nutrition * 10;
-  const hydrationScore = hydration * 10;
+  const nutritionScore = getNutritionScore(foods) * 10;
+  const hydrationScore = getHydrationScore(waterOz, recommendedOz) * 10;
 
   const raw =
     hourScore * 0.26 +
@@ -40,10 +62,11 @@ export function getMetrics(score) {
 }
 
 // Sport-specific insight
-export function getInsight(score, { hours, quality, stress, sport }) {
+export function getInsight(score, { hours, quality, stress, sport, waterOz, recommendedOz }) {
   if (hours < 6) return `With only ${hours}h of sleep, your reaction time and coordination will be noticeably slower. For ${sport}, focus on fundamentals and avoid high-intensity work.`;
   if (stress >= 8) return `High stress is suppressing your recovery hormones. Before your ${sport} session, try 5 minutes of deep breathing to lower cortisol and sharpen focus.`;
   if (quality <= 4) return `Poor sleep quality means less time in deep sleep — where muscle repair happens. Hydrate well before your ${sport} session and warm up longer than usual.`;
+  if (waterOz && recommendedOz && waterOz < recommendedOz * 0.5) return `You're significantly under-hydrated. Even mild dehydration cuts endurance and focus. Drink water before your ${sport} session today.`;
   if (score >= 85) return `You're well-rested and primed to push hard. Great day for high-intensity ${sport} drills or practicing new skills that need sharp focus.`;
   if (score >= 70) return `Solid recovery. You're in a good spot for ${sport} today — stick to your plan and compete with confidence.`;
   return `Below-average sleep. Be intentional about your warm-up for ${sport} and listen to your body. A lighter session today protects you for tomorrow.`;
@@ -51,8 +74,7 @@ export function getInsight(score, { hours, quality, stress, sport }) {
 
 // Format date for display
 export function formatDate(isoString) {
-  const date = new Date(isoString);
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return new Date(isoString).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
 // Get streak count from history
