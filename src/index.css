@@ -26,6 +26,24 @@
   --radius-sm: 8px;
 }
 
+[data-theme="light"] {
+  --bg: #f2f2f2;
+  --bg-card: #ffffff;
+  --bg-input: #e5e5e5;
+  --border: rgba(0,0,0,0.1);
+  --border-hover: rgba(0,0,0,0.2);
+  --text: #0a0a0a;
+  --text-muted: #444;
+  --text-dim: #888;
+  --accent: #00a372;
+  --accent-dim: rgba(0,163,114,0.1);
+  --accent-border: rgba(0,163,114,0.35);
+  --warn: #d97706;
+  --warn-dim: rgba(217,119,6,0.1);
+  --danger: #dc2626;
+  --danger-dim: rgba(220,38,38,0.1);
+}
+
 body {
   background: var(--bg);
   color: var(--text);

@@ -47,7 +47,7 @@ const s = {
   },
 };
 
-export default function ProfilePage({ profile, setProfile }) {
+export default function ProfilePage({ profile, setProfile, theme, setTheme }) {
   const [saved, setSaved] = useState(false);
 
   const recommendedOz = getRecommendedWaterOz(profile);
@@ -153,6 +153,31 @@ export default function ProfilePage({ profile, setProfile }) {
             <div style={s.targetVal}>{weightInLbs} lbs</div>
             <div style={s.targetLabel}>Body weight</div>
           </div>
+        </div>
+      </div>
+
+      <div style={s.card}>
+        <div style={s.heading}>Appearance</div>
+        <div style={{ display: 'flex', gap: 10 }}>
+          {[
+            { value: 'dark', label: '🌙 Dark' },
+            { value: 'light', label: '☀️ Light' },
+          ].map(({ value, label }) => (
+            <button
+              key={value}
+              onClick={() => setTheme(value)}
+              style={{
+                flex: 1, padding: '12px 0', fontSize: 14, fontWeight: theme === value ? 500 : 400,
+                borderRadius: 'var(--radius-sm)',
+                border: theme === value ? '1.5px solid var(--accent-border)' : '0.5px solid var(--border)',
+                background: theme === value ? 'var(--accent-dim)' : 'transparent',
+                color: theme === value ? 'var(--accent)' : 'var(--text-muted)',
+                cursor: 'pointer', transition: 'all 0.15s',
+              }}
+            >
+              {label}
+            </button>
+          ))}
         </div>
       </div>
 

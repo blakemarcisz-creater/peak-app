@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useLayoutEffect } from 'react';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { calcScore, getRecommendedWaterOz } from './utils/scoring';
+import Onboarding from './components/Onboarding';
 import LogPage from './components/LogPage';
 import ScorePage from './components/ScorePage';
 import HistoryPage from './components/HistoryPage';
@@ -34,11 +35,18 @@ const DEFAULT_PROFILE = {
 };
 
 export default function App() {
-  const [tab, setTab] = useState('log');
-  const [form, setForm] = useState(DEFAULT_FORM);
+  const [tab, setTab] = React.useState('log');
+  const [form, setForm] = React.useState(DEFAULT_FORM);
   const [history, setHistory] = useLocalStorage('peak_history', []);
   const [latest, setLatest] = useLocalStorage('peak_latest', null);
   const [profile, setProfile] = useLocalStorage('peak_profile', DEFAULT_PROFILE);
+  const [onboarded, setOnboarded] = useLocalStorage('peak_onboarded', false);
+  const [theme, setTheme] = useLocalStorage('peak_theme', 'dark');
+
+  // Apply theme before paint to avoid flash
+  useLayoutEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   const todayStr = new Date().toDateString();
   const todayLogged = history.some(e => new Date(e.date).toDateString() === todayStr);
@@ -55,21 +63,34 @@ export default function App() {
     setTab('score');
   }
 
+  function handleOnboardingComplete(profileData) {
+    setProfile(profileData);
+    setOnboarded(true);
+  }
+
+  if (!onboarded) {
+    return (
+      <Onboarding
+        theme={theme}
+        setTheme={setTheme}
+        onComplete={handleOnboardingComplete}
+      />
+    );
+  }
+
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
       <header style={{
         position: 'sticky', top: 0, zIndex: 10,
-        background: 'rgba(10,10,10,0.85)', backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)', borderBottom: '0.5px solid var(--border)',
-        padding: '0 20px',
+        background: theme === 'light' ? 'rgba(242,242,242,0.88)' : 'rgba(10,10,10,0.85)',
+        backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+        borderBottom: '0.5px solid var(--border)', padding: '0 20px',
       }}>
         <div style={{ maxWidth: 480, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 56 }}>
           <span style={{ fontSize: 18, fontWeight: 600, letterSpacing: '-0.03em', color: 'var(--accent)' }}>Peak</span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             {profile.name && (
-              <span style={{ fontSize: 12, color: 'var(--text-dim)' }}>
-                {profile.name}
-              </span>
+              <span style={{ fontSize: 12, color: 'var(--text-dim)' }}>{profile.name}</span>
             )}
             {latest && new Date(latest.date).toDateString() === todayStr && (
               <span style={{
@@ -108,14 +129,20 @@ export default function App() {
           />
         )}
         {tab === 'profile' && (
-          <ProfilePage profile={profile} setProfile={setProfile} />
+          <ProfilePage
+            profile={profile}
+            setProfile={setProfile}
+            theme={theme}
+            setTheme={setTheme}
+          />
         )}
       </main>
 
       <nav style={{
         position: 'fixed', bottom: 0, left: 0, right: 0,
-        background: 'rgba(10,10,10,0.92)', backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)', borderTop: '0.5px solid var(--border)',
+        background: theme === 'light' ? 'rgba(242,242,242,0.95)' : 'rgba(10,10,10,0.92)',
+        backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
+        borderTop: '0.5px solid var(--border)',
         display: 'flex', justifyContent: 'center',
       }}>
         <div style={{ display: 'flex', maxWidth: 480, width: '100%' }}>
