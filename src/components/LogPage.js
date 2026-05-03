@@ -169,6 +169,26 @@ export default function LogPage({ form, setForm, onSubmit, todayLogged }) {
           formatVal={v => `${v}/10`}
           minLabel="Drained" maxLabel="Energized"
         />
+      </div>
+
+      <div style={styles.card}>
+        <div style={styles.heading}>Nutrition & Hydration</div>
+        <SliderRow
+          label="Meal quality"
+          min={1} max={10} step={1}
+          value={form.nutrition}
+          onChange={v => setForm(f => ({ ...f, nutrition: v }))}
+          formatVal={v => `${v}/10`}
+          minLabel="Poor diet" maxLabel="Clean eating"
+        />
+        <SliderRow
+          label="Hydration"
+          min={1} max={10} step={1}
+          value={form.hydration}
+          onChange={v => setForm(f => ({ ...f, hydration: v }))}
+          formatVal={v => `${v}/10`}
+          minLabel="Dehydrated" maxLabel="Well hydrated"
+        />
         <div style={{ marginTop: 4 }}>
           <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 8 }}>Notes (optional)</div>
           <textarea

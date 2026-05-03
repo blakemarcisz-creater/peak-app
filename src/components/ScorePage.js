@@ -121,6 +121,7 @@ function buildShareText(latest, tier, metrics) {
     `Sport: ${latest.sport}`,
     `Score: ${latest.score}/99 — ${tier.description}`,
     `Sleep: ${latest.hours}h | Quality: ${latest.quality}/10 | Mood: ${latest.mood ?? '—'}/10`,
+    `Nutrition: ${latest.nutrition ?? '—'}/10 | Hydration: ${latest.hydration ?? '—'}/10`,
     ``,
     `Reaction: ${metrics.reaction}%  Endurance: ${metrics.endurance}%`,
     `Focus: ${metrics.focus}%  Power: ${metrics.power}%`,

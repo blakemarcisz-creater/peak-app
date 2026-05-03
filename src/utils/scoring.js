@@ -1,18 +1,22 @@
-// Calculate the performance score from sleep inputs
-export function calcScore({ hours, quality, consistency, stress, mood = 5 }) {
+// Calculate the performance score from sleep, mood, and nutrition inputs
+export function calcScore({ hours, quality, consistency, stress, mood = 5, nutrition = 5, hydration = 5 }) {
   const idealHours = 8.5;
   const hourScore = Math.max(0, 100 - Math.pow(hours - idealHours, 2) * 8);
   const qualityScore = quality * 10;
   const consistencyScore = consistency * 10;
   const stressScore = (10 - stress) * 10;
   const moodScore = mood * 10;
+  const nutritionScore = nutrition * 10;
+  const hydrationScore = hydration * 10;
 
   const raw =
-    hourScore * 0.30 +
-    qualityScore * 0.25 +
-    consistencyScore * 0.20 +
-    stressScore * 0.13 +
-    moodScore * 0.12;
+    hourScore * 0.26 +
+    qualityScore * 0.22 +
+    consistencyScore * 0.18 +
+    stressScore * 0.12 +
+    moodScore * 0.10 +
+    nutritionScore * 0.08 +
+    hydrationScore * 0.04;
 
   return Math.min(99, Math.max(10, Math.round(raw)));
 }

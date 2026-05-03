@@ -18,6 +18,8 @@ const DEFAULT_FORM = {
   consistency: 6,
   stress: 4,
   mood: 6,
+  nutrition: 6,
+  hydration: 6,
   notes: '',
 };
 
