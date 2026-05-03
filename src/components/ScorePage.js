@@ -151,7 +151,7 @@ export default function ScorePage({ latest, onGoLog, recommendedOz = 64, profile
       })
       .catch(() => setAiError(true))
       .finally(() => setAiLoading(false));
-  }, [latest?.date]);
+  }, [latest?.date, profile, recommendedOz]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!latest) {
     return (
