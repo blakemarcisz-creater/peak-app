@@ -139,7 +139,7 @@ export default function ScorePage({ latest, onGoLog, recommendedOz = 64, profile
     setAiSummary('');
     setAiError(false);
     setAiLoading(true);
-    fetch('/api/summary', {
+    fetch('http://localhost:3001/api/summary', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...latest, recommendedOz, profile }),

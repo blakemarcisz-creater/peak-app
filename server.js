@@ -32,12 +32,17 @@ app.post('/api/summary', async (req, res) => {
           role: 'user',
           content: `A ${age}-year-old ${gender} ${name} who plays ${sport} has logged today's data:
 - Performance score: ${score}/99
-- Sleep: ${hours}h, quality ${quality}/10, consistency ${consistency}/10
+- Sleep last night: ${hours}h, quality ${quality}/10, consistency ${consistency}/10
 - Stress: ${stress}/10, Mood/Energy: ${mood}/10
-- Hydration: ${waterOz}oz of a ${recommendedOz}oz daily goal (${hydrationPct}%)
-- Food today: ${foodList}
+- Water so far today: ${waterOz}oz of a ${recommendedOz}oz daily goal (${hydrationPct}%)
+- Food logged today: ${foodList}
 
-Write exactly 2-3 sentences. Be specific to their numbers and sport. Lead with what their score means for today's ${sport} session, then give one concrete actionable tip targeting their weakest metric. Be direct and motivating.`,
+Give a forward-looking coaching response with exactly 3 short bullet points:
+• What to eat for the rest of today to perform better (be specific — actual foods)
+• Exactly how much more water to drink today and when
+• How many hours to sleep tonight and what time to go to bed to improve tomorrow's score
+
+Be specific, direct, and motivating. Do not comment on the score being bad. Focus only on what they should do next.`,
         },
       ],
     });
